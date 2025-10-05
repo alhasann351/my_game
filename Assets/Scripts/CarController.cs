@@ -4,7 +4,10 @@ public class CarController : MonoBehaviour
 {
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider, backRightWheelCollider, backLeftWheelCollider;
     public Transform frontRightWheelTransform, frontLeftWheelTransform, backRightWheelTransform, backLeftWheelTransform;
-
+    public float verticalInput, horizontalInput;
+    public float motorForce = 100f;
+    public float steeringAngle = 30f;
+   
     void Start()
     {
         
@@ -14,12 +17,26 @@ public class CarController : MonoBehaviour
     {
         MotorForce();
         UpdateWheels();
+        GetInput();
+        Steering();
+    }
+
+    void GetInput()
+    {
+        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxis("Horizontal");
     }
 
     void MotorForce()
     {
-        frontRightWheelCollider.motorTorque = 10f;
-        frontLeftWheelCollider.motorTorque = 10f;
+        frontRightWheelCollider.motorTorque = motorForce * verticalInput;
+        frontLeftWheelCollider.motorTorque = motorForce * verticalInput;
+    }
+
+    void Steering()
+    {
+        frontRightWheelCollider.steerAngle = steeringAngle * horizontalInput;
+        frontLeftWheelCollider.steerAngle = steeringAngle * horizontalInput;
     }
 
     void UpdateWheels()
