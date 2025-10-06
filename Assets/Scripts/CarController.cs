@@ -3,14 +3,16 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     public WheelCollider frontRightWheelCollider, frontLeftWheelCollider, backRightWheelCollider, backLeftWheelCollider;
-    public Transform frontRightWheelTransform, frontLeftWheelTransform, backRightWheelTransform, backLeftWheelTransform;
+    public Transform frontRightWheelTransform, frontLeftWheelTransform, backRightWheelTransform, backLeftWheelTransform, carCenterOfMassTransform;
+    public Rigidbody carRigidbody;
     public float verticalInput, horizontalInput;
     public float motorForce = 100f;
     public float steeringAngle = 30f;
+    public float brakeForce = 1000f;
    
     void Start()
     {
-        
+        carRigidbody.centerOfMass = carCenterOfMassTransform.localPosition;
     }
 
     void FixedUpdate()
@@ -19,12 +21,31 @@ public class CarController : MonoBehaviour
         UpdateWheels();
         GetInput();
         Steering();
+        ApplyBrakes();
     }
 
     void GetInput()
     {
         verticalInput = Input.GetAxis("Vertical");
         horizontalInput = Input.GetAxis("Horizontal");
+    }
+
+    void ApplyBrakes()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            frontRightWheelCollider.brakeTorque = brakeForce;
+            frontLeftWheelCollider.brakeTorque = brakeForce;
+            backRightWheelCollider.brakeTorque = brakeForce;
+            backLeftWheelCollider.brakeTorque = brakeForce;
+        }
+        else
+        {
+            frontRightWheelCollider.brakeTorque = 0f;
+            frontLeftWheelCollider.brakeTorque = 0f;
+            backRightWheelCollider.brakeTorque = 0f;
+            backLeftWheelCollider.brakeTorque = 0f;
+        }
     }
 
     void MotorForce()
