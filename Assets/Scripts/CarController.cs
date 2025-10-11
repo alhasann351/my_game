@@ -23,6 +23,7 @@ public class CarController : MonoBehaviour
         GetInput();
         Steering();
         ApplyBrakes();
+        PowerSteering();
     }
 
     void GetInput()
@@ -39,6 +40,7 @@ public class CarController : MonoBehaviour
             frontLeftWheelCollider.brakeTorque = brakeForce;
             backRightWheelCollider.brakeTorque = brakeForce;
             backLeftWheelCollider.brakeTorque = brakeForce;
+            carRigidbody.linearDamping = 1f;
         }
         else
         {
@@ -46,6 +48,7 @@ public class CarController : MonoBehaviour
             frontLeftWheelCollider.brakeTorque = 0f;
             backRightWheelCollider.brakeTorque = 0f;
             backLeftWheelCollider.brakeTorque = 0f;
+            carRigidbody.linearDamping = 0f;
         }
     }
 
@@ -59,6 +62,14 @@ public class CarController : MonoBehaviour
     {
         frontRightWheelCollider.steerAngle = steeringAngle * horizontalInput;
         frontLeftWheelCollider.steerAngle = steeringAngle * horizontalInput;
+    }
+
+    void PowerSteering()
+    {
+        if(horizontalInput == 0)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime);
+        }
     }
 
     void UpdateWheels()
